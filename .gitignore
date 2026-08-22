@@ -1,0 +1,34 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno
+.env
+.env.*
+!.env.example
+
+# Build
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Prisma / bases locales
+*.db
+*.db-journal
+
+# Backups
+*.sql
+*.dump
+backups/
+
+# Temporales
+tmp/
+temp/

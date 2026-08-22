@@ -1,0 +1,37 @@
+{
+  "name": "bafar-woocommerce",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "sync:all": "tsx src/scripts/sync-all.ts",
+    "reconcile:all": "tsx src/scripts/reconcile-all.ts",
+    "reconcile:detail": "tsx src/scripts/reconcile-detail.ts",
+    "reconcile:repair": "tsx src/scripts/reconcile-auto-repair.ts",
+    "repair:order": "tsx src/scripts/repair-order.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "^7.9.1",
+    "axios": "^1.19.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "openai": "^7.5.0",
+    "pg": "^8.23.0",
+    "prisma": "^7.9.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.2.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
+  }
+}

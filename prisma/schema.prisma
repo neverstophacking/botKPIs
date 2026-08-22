@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Store {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders Order[]
+}
+
+model Order {
+  id           Int      @id @default(autoincrement())
+  storeId      Int
+  wooOrderId   Int
+  status       String
+  currency     String?
+  dateCreated  DateTime
+  dateModified DateTime?
+  total        Decimal  @db.Decimal(14, 2)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
+  items OrderItem[]
+
+  @@unique([storeId, wooOrderId])
+  @@index([storeId, dateCreated])
+  @@index([status])
+}
+
+model OrderItem {
+  id          Int     @id @default(autoincrement())
+  orderId     Int
+  wooItemId   Int
+  productId   Int?
+  variationId Int?
+  sku         String?
+  productName String
+  quantity    Decimal @db.Decimal(14, 3)
+  subtotal    Decimal @db.Decimal(14, 2)
+  total       Decimal @db.Decimal(14, 2)
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model WhatsAppUser {
+  id        Int      @id @default(autoincrement())
+  phone     String   @unique
+  name      String
+  role      String   @default("viewer")
+  storeCode String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("whatsapp_users")
+}
+
+model ReconciliationRun {
+  id        Int      @id @default(autoincrement())
+  storeCode String
+  dateFrom  DateTime
+  dateTo    DateTime
+  ok        Boolean
+  details   Json
+  createdAt DateTime @default(now())
+
+  @@index([storeCode, createdAt])
+  @@index([ok, createdAt])
+  @@map("reconciliation_runs")
+}
+
+model SystemAlert {
+  id        Int      @id @default(autoincrement())
+  type      String
+  severity  String
+  storeCode String?
+  message   String
+  details   Json?
+  resolved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  resolvedAt DateTime?
+
+  @@index([resolved, createdAt])
+  @@index([type, createdAt])
+  @@map("system_alerts")
+}
