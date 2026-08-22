@@ -32,3 +32,18 @@ backups/
 # Temporales
 tmp/
 temp/
+
+# TypeScript compilado accidentalmente dentro de src
+src/**/*.js
+src/**/*.js.map
+src/**/*.d.ts
+src/**/*.d.ts.map
+
+# Prisma config compilado
+prisma.config.js
+prisma.config.js.map
+prisma.config.d.ts
+prisma.config.d.ts.map
+
+# Prisma/generated si realmente es regenerable
+src/generated/
