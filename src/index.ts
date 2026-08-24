@@ -7,7 +7,7 @@ import n8nRoutes from "./routes/n8n.routes.js";
 
 const app = express();
 
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json());
 
@@ -51,16 +51,10 @@ app.get(
   }
 );
 
-app.listen(PORT, () => {
-  console.log("");
-  console.log("==============================");
-  console.log(" BAFAR COMMERCE INTELLIGENCE");
-  console.log("==============================");
-  console.log("");
-  console.log(
-    `Servidor iniciado en http://localhost:${PORT}`
-  );
-  console.log("");
+
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Servidor iniciado en puerto ${PORT}`);
 });
 
 iniciarSincronizacionAutomatica(5, 60);
