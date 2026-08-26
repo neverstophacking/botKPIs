@@ -7,6 +7,7 @@
     "dev": "tsx watch src/index.ts",
     "build": "prisma generate && tsc",
     "start": "node dist/index.js",
+    "migrate:deploy": "prisma migrate deploy",
     "sync:all": "tsx src/scripts/sync-all.ts",
     "reconcile:all": "tsx src/scripts/reconcile-all.ts",
     "reconcile:detail": "tsx src/scripts/reconcile-detail.ts",
