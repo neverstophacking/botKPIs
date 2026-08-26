@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "whatsapp_users" ALTER COLUMN "updatedAt" SET DEFAULT CURRENT_TIMESTAMP;
