@@ -14,40 +14,105 @@ model Store {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  orders  Order[]
+  centers Center[]
+}
+
+model Center {
+  id Int @id @default(autoincrement())
+
+  storeId Int
+
+  // Código del centro.
+  // Ejemplo:
+  // M423
+  code String
+
+  // Nombre completo del centro.
+  // Ejemplo:
+  // CMT Veracruz Astilleros - M423
+  name String
+
+  // Valor de meta_data "location".
+  // Ejemplo:
+  // 255
+  locationKey String?
+
+  // Valor de meta_data "location_id".
+  // Ejemplo:
+  // 294
+  locationId String?
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store  Store   @relation(fields: [storeId], references: [id], onDelete: Cascade)
   orders Order[]
+
+  @@unique([storeId, code])
+  @@index([storeId])
+  @@index([name])
+  @@index([locationId])
 }
 
 model Order {
-  id           Int      @id @default(autoincrement())
-  storeId      Int
-  wooOrderId   Int
-  status       String
-  currency     String?
-  dateCreated  DateTime
-  dateModified DateTime?
-  total        Decimal  @db.Decimal(14, 2)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id Int @id @default(autoincrement())
 
-  store Store @relation(fields: [storeId], references: [id])
+  storeId Int
+
+  // Nullable para mantener compatibilidad
+  // con pedidos ya existentes.
+  centerId Int?
+
+  wooOrderId Int
+
+  status String
+
+  currency String?
+
+  dateCreated DateTime
+
+  dateModified DateTime?
+
+  total Decimal @db.Decimal(14, 2)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  store  Store   @relation(fields: [storeId], references: [id])
+  center Center? @relation(fields: [centerId], references: [id], onDelete: SetNull)
+
   items OrderItem[]
 
   @@unique([storeId, wooOrderId])
   @@index([storeId, dateCreated])
+  @@index([centerId, dateCreated])
   @@index([status])
 }
 
 model OrderItem {
-  id          Int     @id @default(autoincrement())
-  orderId     Int
-  wooItemId   Int
-  productId   Int?
+  id Int @id @default(autoincrement())
+
+  orderId Int
+
+  wooItemId Int
+
+  productId Int?
+
   variationId Int?
-  sku         String?
+
+  sku String?
+
   productName String
-  quantity    Decimal @db.Decimal(14, 3)
-  subtotal    Decimal @db.Decimal(14, 2)
-  total       Decimal @db.Decimal(14, 2)
+
+  quantity Decimal @db.Decimal(14, 3)
+
+  subtotal Decimal @db.Decimal(14, 2)
+
+  total Decimal @db.Decimal(14, 2)
 
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
@@ -56,25 +121,38 @@ model OrderItem {
 }
 
 model WhatsAppUser {
-  id        Int      @id @default(autoincrement())
-  phone     String   @unique
-  name      String
-  role      String   @default("viewer")
+  id Int @id @default(autoincrement())
+
+  phone String @unique
+
+  name String
+
+  role String @default("viewer")
+
   storeCode String?
-  active    Boolean  @default(true)
+
+  active Boolean @default(true)
+
   createdAt DateTime @default(now())
+
   updatedAt DateTime @default(now()) @updatedAt
 
   @@map("whatsapp_users")
 }
 
 model ReconciliationRun {
-  id        Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+
   storeCode String
-  dateFrom  DateTime
-  dateTo    DateTime
-  ok        Boolean
-  details   Json
+
+  dateFrom DateTime
+
+  dateTo DateTime
+
+  ok Boolean
+
+  details Json
+
   createdAt DateTime @default(now())
 
   @@index([storeCode, createdAt])
@@ -83,14 +161,22 @@ model ReconciliationRun {
 }
 
 model SystemAlert {
-  id        Int      @id @default(autoincrement())
-  type      String
-  severity  String
+  id Int @id @default(autoincrement())
+
+  type String
+
+  severity String
+
   storeCode String?
-  message   String
-  details   Json?
-  resolved  Boolean  @default(false)
+
+  message String
+
+  details Json?
+
+  resolved Boolean @default(false)
+
   createdAt DateTime @default(now())
+
   resolvedAt DateTime?
 
   @@index([resolved, createdAt])
